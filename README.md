@@ -85,5 +85,5 @@ Tips:
 - How to navigate the Sui and STD library: Always think what you want to achieve and then research the Sui library by keywords to see how you could achieve what you need. Pay attention to function signatures (what parameters they expect) and their return types.
 
 ### TODOs
-- [] Implement a function that creates a cold coffee and adds a Straw. Function should return the coffee.
-- [] Declare a struct for our coffeeshop registry where we will keep a balance of SUI.
+- [ ] Implement a function that creates a cold coffee and adds a Straw. Function should return the coffee.
+- [ ] Declare a struct for our coffeeshop registry where we will keep a balance of SUI.
