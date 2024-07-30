@@ -24,6 +24,11 @@ module move_training::suispresso {
         color: String,
     }
 
+    public struct Registry has key {
+        id: UID,
+        balance: u64,
+    }
+
     // === Error codes ===
 
     // === Public functions ===
@@ -40,6 +45,25 @@ module move_training::suispresso {
 
         coffee
     }
+
+    public fun create_cold_coffee_with_straw(name: String, size: u8, price: u64, straw_color: String, ctx: &mut TxContext): Coffee {
+        let straw = Straw {
+            color: straw_color,
+        };
+        let coffee = Coffee {
+            id: object::new(ctx),
+            name,
+            size,
+            price,
+            iced: true,
+            creator: ctx.sender(),
+            addons: option::some(straw),
+        };
+
+        coffee
+    }
+
+
 }
 
 // === Private functions ===
