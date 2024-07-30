@@ -35,6 +35,7 @@ $ sui move new <your_project_name>
 ```
 
 How to build your move project
+
 ```bash
 $ sui move build
 ```
@@ -77,7 +78,7 @@ Tips:
   - Mutable reference `fun example_fun(obj: &mut Object)` - function can mutate the object.
 - Object ownership in-module: An object can only be manipulated as per the module's supported functions. Object cannot be mutated outside of its module unless there is a function to allow so.
 - Function visibility:
-  - `public fun example_fun()` - anyone can call this function, such as the CLI, other modules and  packages.
+  - `public fun example_fun()` - anyone can call this function, such as the CLI, other modules and packages.
   - `fun example_fun()` - functions without a specific visibility identifier are private to their modules. Cannot be accessed by other modules and by no means other packages.
   - `public(package) fun example_fun()` - function can be accessed by other modules under the same package only. Cannot be accessed by other packages and anywhere else.
 - Function signatures and function returns.
@@ -85,9 +86,9 @@ Tips:
 - How to navigate the Sui and STD library: Always think what you want to achieve and then research the Sui library by keywords to see how you could achieve what you need. Pay attention to function signatures (what parameters they expect) and their return types.
 
 ### TODOs
-- [ ] Implement a function that creates a cold coffee and adds a Straw. Function should return the coffee.
-- [ ] Declare a struct for our coffeeshop registry where we will keep a balance of SUI.
 
+- [x] Implement a function that creates a cold coffee and adds a Straw. Function should return the coffee.
+- [x] Declare a struct for our coffeeshop registry where we will keep a balance of SUI.
 
 ## Session #2
 
@@ -95,6 +96,19 @@ Tips:
 
 ### Summary
 
-- Struct generic types.
-- How to avoid duplicate code and how to approach creating helper methods (internal to the module) to help with repetitive tasks.
+- Revised struct generic types and their use in function calls.
+- Revised struct abilities and their combinations (for example, an object that has `key` cannot have `drop`).
+- Explained the purpose of omitting the `store` ability from structs if we don't want to allow transfers outside of the module from other parties.
+- Talked about the difference of owned vs shared objects:
+  - Owned objects always have an owner of type `address`, because as the name states, they are owned by someone. Only the owner of the object can use it in a transaction. Owned objects can be passed by value, by reference `&` and mutable reference `&mut`.
+  - Shared objects are not owned by anyone and can be accessed and used by anyone in a transaction. A shared object can be passed by reference `&` or mutable `&mut`, but not by value.
+- Worked on creating helper functions to avoid repetitive/duplicate code.
+- Discussed the approach of designing a contract and how we abstract the logic of our use cases into separate modules that handle specific parts of the logic. We don't want to have a do-it-all module that is too complicated to manage, read and maintain.
 - How to pass option arguments in a function call and how to check for empty options with `is_none` and `is_some`.
+- Worked with `coin` and `balance` modules, and how we convert a Coin into a Balance and vice versa.
+- Purpose of `init` functions - they only run once upon publishing our smart contract. Existing `init` functions (or even newly added in new modules) don't run when we upgrade an already published package. It's not possible to return anything through the `init` function because they only execute actions.
+
+### TODOs
+
+- [ ] Implement a function in the `coffee` module that the customer can use to buy a coffee. The function must accept a payment of type `Coin<SUI>` and all the data it needs so that the worker can create the coffee. The function should transfer the coffee to the customer and deposit his payment to the cash registry.
+- [ ] Food for thought: How could we restrict access to buying a coffee only to customers that would carry one of our membership cards?
