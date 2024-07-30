@@ -87,3 +87,14 @@ Tips:
 ### TODOs
 - [ ] Implement a function that creates a cold coffee and adds a Straw. Function should return the coffee.
 - [ ] Declare a struct for our coffeeshop registry where we will keep a balance of SUI.
+
+
+## Session #2
+
+📅 Tuesday 30th, July, 2024
+
+### Summary
+
+- Struct generic types.
+- How to avoid duplicate code and how to approach creating helper methods (internal to the module) to help with repetitive tasks.
+- How to pass option arguments in a function call and how to check for empty options with `is_none` and `is_some`.
