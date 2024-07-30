@@ -1,71 +1,28 @@
-/// We have a cofee shop to run.
-/// 1. We want to sell coffee.
-/// 2. We need a registry to keep track of payments.
-/// 3. Create a coffee - worker needs a way to create a new coffee.
-/// 4. Customer needs a way to buy a coffee (that was created)
-///
 module move_training::suispresso {
-    // === Imports ===
-    use std::string::{String};
+    use sui::coin::{Self, Coin};
+    use sui::sui::{SUI};
+    use sui::balance::{Self, Balance};
 
-    // === Structs ===
-
-    public struct Coffee has key, store {
+    /// Cash registry that holds the balance of the coffee shop.
+    public struct CashRegistry has key {
         id: UID,
-        name: String,
-        size: u8, // 8 or 16 oz
-        price: u64,
-        iced: bool, // iced or hot coffee
-        creator: address,
-        addons: Option<Straw>,
+        balance: Balance<SUI>,
     }
 
-    public struct Straw has store {
-        color: String,
-    }
-
-    public struct Registry has key {
-        id: UID,
-        balance: u64,
-    }
-
-    // === Error codes ===
-
-    // === Public functions ===
-    public fun create_hot_coffee(name: String, size: u8, price: u64, ctx: &mut TxContext): Coffee {
-        let coffee = Coffee {
+    /// Coin<SUI> <--> Balance<SUI> --> u64
+    /// This function is ran once upon publishing the smart contract.
+    /// Create and share the cash registry.
+    fun init(ctx: &mut TxContext) {
+        let registry = CashRegistry {
             id: object::new(ctx),
-            name,
-            size,
-            price,
-            iced: false,
-            creator: ctx.sender(),
-            addons: option::none(),
+            balance: balance::zero(),
         };
 
-        coffee
+        transfer::share_object(registry);
     }
 
-    public fun create_cold_coffee_with_straw(name: String, size: u8, price: u64, straw_color: String, ctx: &mut TxContext): Coffee {
-        let straw = Straw {
-            color: straw_color,
-        };
-        let coffee = Coffee {
-            id: object::new(ctx),
-            name,
-            size,
-            price,
-            iced: true,
-            creator: ctx.sender(),
-            addons: option::some(straw),
-        };
-
-        coffee
+    /// Increase the balance of the cash registry.
+    public fun deposit(payment: Coin<SUI>, registry: &mut CashRegistry) {
+        coin::put(&mut registry.balance, payment);
     }
-
-
 }
-
-// === Private functions ===
-
-// === Accessors/Getters ===
