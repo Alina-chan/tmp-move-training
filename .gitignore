@@ -23,3 +23,7 @@ sui.log*
 # Move
 Move.lock
 build/
+
+# TS 
+node_modules/
+.env

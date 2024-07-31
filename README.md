@@ -126,8 +126,16 @@ Tips:
 - How to import module functions in other modules from your own package.
 - What is a dependency cycle and how to avoid.
 - Move 2024 method syntax and creating aliases for functions.
+- Typescript SDK and how to create a Transaction Block.
+- How to set up a .env and config file in TS in order to feed your contract related data to your app.
+- Execute a moveCall via the SDK.
+
+#### Notes
+
+In order to interact with the smart contract through the TS code, you will need to `sui client publish` the package and populate your `.env` accordingly (include your private key so you can sign transactions).
 
 ### TODOs
 
 - [ ] Update the `history` vector in `membership` module, to add an entry of the current timestamp every time someone buys a coffee. You will need to add appropriate functions for accessing and updating the vector.
-
+- [ ] Create a new `EmployeeCard` through the SDK.
+- [ ] Create an `MembershipCard` through the SDK.
