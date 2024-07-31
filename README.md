@@ -110,5 +110,24 @@ Tips:
 
 ### TODOs
 
-- [ ] Implement a function in the `coffee` module that the customer can use to buy a coffee. The function must accept a payment of type `Coin<SUI>` and all the data it needs so that the worker can create the coffee. The function should transfer the coffee to the customer and deposit his payment to the cash registry.
-- [ ] Food for thought: How could we restrict access to buying a coffee only to customers that would carry one of our membership cards?
+- [x] Implement a function in the `coffee` module that the customer can use to buy a coffee. The function must accept a payment of type `Coin<SUI>` and all the data it needs so that the worker can create the coffee. The function should return the coffee and deposit his payment to the cash registry.
+- [x] Food for thought: How could we restrict access to buying a coffee only to customers that would carry one of our membership cards?
+
+## Session #3
+
+📅 Tuesday 31th, July, 2024
+
+### Summary
+
+- Witness pattern and one-time-witness
+- What is a `Publisher`, how and when to claim and how to use to create a `Display` for multiple objects.
+- How to restrict function access by requiring a capability to be passed as a witness with `&` reference.
+- How to burn objects. Objects should always be destroyed in the module that defines them. In order to destroy an object, first we need to destructure it and manually delete any fields that don't have `drop`.
+- How to import module functions in other modules from your own package.
+- What is a dependency cycle and how to avoid.
+- Move 2024 method syntax and creating aliases for functions.
+
+### TODOs
+
+- [ ] Update the `history` vector in `membership` module, to add an entry of the current timestamp every time someone buys a coffee. You will need to add appropriate functions for accessing and updating the vector.
+
