@@ -8,6 +8,9 @@ dependencies:
   '@mysten/sui':
     specifier: ^1.4.0
     version: 1.4.0(svelte@4.2.18)(typescript@5.5.4)
+  '@types/node':
+    specifier: ^22.0.0
+    version: 22.0.0
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -60,8 +63,8 @@ packages:
     engines: {node: '>=6.9.0'}
     dev: false
 
-  /@babel/parser@7.25.0:
-    resolution: {integrity: sha512-CzdIU9jdP0dg7HdyB+bHvDJGagUv+qtzZt5rYCWwW6tITNqV9odjp6Qu41gkG0ca5UfdDUWrKkiAnHHdGRnOrA==}
+  /@babel/parser@7.25.3:
+    resolution: {integrity: sha512-iLTJKDbJ4hMvFPgQwwsVoxtHyWpKKPBrxkANrSYewDPaPpT5py5yeVkgPIJ7XYXhndxJpaA3PyALSXQ7u8e/Dw==}
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
@@ -258,7 +261,7 @@ packages:
   /@vue/compiler-core@3.4.35:
     resolution: {integrity: sha512-gKp0zGoLnMYtw4uS/SJRRO7rsVggLjvot3mcctlMXunYNsX+aRJDqqw/lV5/gHK91nvaAAlWFgdVl020AW1Prg==}
     dependencies:
-      '@babel/parser': 7.25.0
+      '@babel/parser': 7.25.3
       '@vue/shared': 3.4.35
       entities: 4.5.0
       estree-walker: 2.0.2

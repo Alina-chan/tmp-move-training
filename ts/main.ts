@@ -4,7 +4,6 @@ import { PACKAGE_ID, suiClient, getKeypair, ADMIN_SECRET } from "./config";
 async function main() {
   // Call the smart contract and mint a new employee card.
   try {
-    console.log("Minting employee card...");
     const tx = new Transaction();
 
     tx.moveCall({
@@ -16,6 +15,10 @@ async function main() {
     const res = await suiClient.signAndExecuteTransaction({
       transaction: tx,
       signer: getKeypair(ADMIN_SECRET!),
+      options: {
+        showEffects: true,
+        showObjectChanges: true,
+      },
     });
 
     console.log(res);
