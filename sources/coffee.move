@@ -8,8 +8,12 @@ module move_training::coffee {
     // === Imports ===
     use std::string::{Self, String};
     use move_training::suispresso::{CashRegistry, deposit};
-    use sui::coin::{Coin,Self};
+    use sui::coin::{Coin, Self};
     use sui::sui::{SUI};
+    use sui::package;
+    use sui::display;
+    use move_training::membership::{MembershipCard};
+
     // === Structs ===
 
     public struct Coffee has key, store {
@@ -20,14 +24,45 @@ module move_training::coffee {
         iced: bool, // iced or hot coffee
         creator: address,
         addons: Option<Straw>,
+        image_url: String,
     }
 
     public struct Straw has store, drop {
         color: String,
     }
 
+    public struct COFFEE has drop {}
+
     // === Error codes ===
     const ERROR_INSUFFICIENT_PAYMENT: u64 = 1;
+
+    fun init(otw: COFFEE, ctx: &mut TxContext) {
+        // Claim the Publisher object.
+        let publisher = package::claim(otw, ctx);
+
+        // Create the fields for the display.
+        let fields = vector[
+            string::utf8(b"name"),
+            string::utf8(b"image_url"),
+        ];
+
+        let values = vector[
+            string::utf8(b"{name}"),
+            string::utf8(b"{image_url}"),
+        ];
+
+        // Create a new display for the Coffee.
+        let mut display = display::new_with_fields<Coffee>(&publisher, fields, values, ctx);
+
+        // Update the display with the new fields.
+        display.update_version();
+
+        // Transfer the publisher to the sender.
+        transfer::public_transfer(publisher, ctx.sender());
+
+        // Transfer the display to the sender.
+        transfer::public_transfer(display, ctx.sender());
+    }
 
     // === Public functions ===
 
@@ -36,9 +71,10 @@ module move_training::coffee {
         name: String,
         size: u8,
         price: u64,
+        image_url: String,
         ctx: &mut TxContext,
     ): Coffee {
-        create_coffee(name, size, price, false, option::none(), ctx)
+        create_coffee(name, size, price, false, option::none(), image_url, ctx)
     }
 
     /// Create a cold coffee (and adds a straw).
@@ -46,36 +82,42 @@ module move_training::coffee {
         name: String,
         size: u8,
         price: u64,
+        image_url: String,
         ctx: &mut TxContext,
     ): Coffee {
-        create_coffee(name, size, price, true, option::some(create_straw()), ctx)
+        create_coffee(name, size, price, true, option::some(create_straw()), image_url, ctx)
     }
 
     /// Give a customer the ability to buy a coffee.
     public fun buy_coffee(
+        card: &mut MembershipCard,
         name: String,
         size: u8,
         price: u64,
         iced: bool,
         payment: Coin<SUI>,
         registry: &mut CashRegistry,
+        image_url: String,
         ctx: &mut TxContext,
     ): Coffee {
         // Verify the payment amount matches the price
-        assert!(coin::value(&payment) == price, ERROR_INSUFFICIENT_PAYMENT); 
+        assert!(coin::value(&payment) == price, ERROR_INSUFFICIENT_PAYMENT);
 
         // Create the coffee
         let coffee = if (iced) {
-            create_cold_coffee(name, size, price, ctx)
+            create_cold_coffee(name, size, price, image_url, ctx)
         } else {
-            create_hot_coffee(name, size, price, ctx)
+            create_hot_coffee(name, size, price, image_url, ctx)
         };
+
+        // Classic syntax
+        // membership::add_points( card, 1);
+
+        // Move 2024 syntax
+        card.add_points(1);
 
         // Deposit the payment into the cash registry
         deposit(payment, registry);
-
-        // Transfer the coffee to the customer
-        //transfer::transfer(coffee, ctx.sender());
 
         coffee
     }
@@ -89,6 +131,7 @@ module move_training::coffee {
         price: u64,
         iced: bool,
         straw: Option<Straw>,
+        image_url: String,
         ctx: &mut TxContext,
     ): Coffee {
         Coffee {
@@ -99,6 +142,7 @@ module move_training::coffee {
             iced,
             creator: ctx.sender(),
             addons: straw,
+            image_url,
         }
     }
 
@@ -108,7 +152,22 @@ module move_training::coffee {
             color: string::utf8(b"red"),
         }
     }
-}
 
+    /// Destroy a coffee.
+    public(package) fun destroy(coffee: Coffee) {
+        let Coffee {
+            id,
+            name: _,
+            size: _, // 8 or 16 oz
+            price: _,
+            iced: _, // iced or hot coffee
+            creator: _,
+            addons: _,
+            image_url: _,
+        } = coffee;
+
+        id.delete();
+    }
+}
 
 // === Accessors/Getters ===
