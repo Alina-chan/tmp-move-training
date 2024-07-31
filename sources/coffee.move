@@ -7,7 +7,9 @@
 module move_training::coffee {
     // === Imports ===
     use std::string::{Self, String};
-
+    use move_training::suispresso::{CashRegistry, deposit};
+    use sui::coin::{Coin,Self};
+    use sui::sui::{SUI};
     // === Structs ===
 
     public struct Coffee has key, store {
@@ -23,6 +25,9 @@ module move_training::coffee {
     public struct Straw has store, drop {
         color: String,
     }
+
+    // === Error codes ===
+    const ERROR_INSUFFICIENT_PAYMENT: u64 = 1;
 
     // === Public functions ===
 
@@ -44,6 +49,35 @@ module move_training::coffee {
         ctx: &mut TxContext,
     ): Coffee {
         create_coffee(name, size, price, true, option::some(create_straw()), ctx)
+    }
+
+    /// Give a customer the ability to buy a coffee.
+    public fun buy_coffee(
+        name: String,
+        size: u8,
+        price: u64,
+        iced: bool,
+        payment: Coin<SUI>,
+        registry: &mut CashRegistry,
+        ctx: &mut TxContext,
+    ): Coffee {
+        // Verify the payment amount matches the price
+        assert!(coin::value(&payment) == price, ERROR_INSUFFICIENT_PAYMENT); 
+
+        // Create the coffee
+        let coffee = if (iced) {
+            create_cold_coffee(name, size, price, ctx)
+        } else {
+            create_hot_coffee(name, size, price, ctx)
+        };
+
+        // Deposit the payment into the cash registry
+        deposit(payment, registry);
+
+        // Transfer the coffee to the customer
+        //transfer::transfer(coffee, ctx.sender());
+
+        coffee
     }
 
     // === Private functions ===
@@ -76,6 +110,5 @@ module move_training::coffee {
     }
 }
 
-// === Private functions ===
 
 // === Accessors/Getters ===
