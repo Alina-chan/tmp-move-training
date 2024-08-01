@@ -27,3 +27,4 @@ build/
 # TS 
 node_modules/
 .env
+package-lock.json
