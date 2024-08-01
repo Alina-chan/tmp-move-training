@@ -5,10 +5,20 @@ async function main() {
   // Call the smart contract and mint a new employee card.
   try {
     const tx = new Transaction();
+    const adminAddress = getKeypair(ADMIN_SECRET!).getPublicKey().toSuiAddress()
 
-    tx.moveCall({
+    const [employeeCard, hotPotato] = tx.moveCall({
       target: `${PACKAGE_ID}::suispresso::new_employee_card`,
       arguments: [],
+    });
+
+    //tx.transferObjects([employeeCard], adminAddress)
+    tx.moveCall({
+      target: `${PACKAGE_ID}::suispresso::transfer_employee_card`,
+      arguments: [
+        hotPotato,
+        employeeCard
+      ],
     });
 
     // Sign the transaction

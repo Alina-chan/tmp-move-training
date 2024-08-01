@@ -20,6 +20,9 @@ public struct EmployeeCard has key {
     id: UID,
 }
 
+/// Object that will be used at temp struct inside the contract
+public struct HotPotato {}
+
 /// Coin<SUI> <--> Balance<SUI> --> u64
 /// This function is ran once upon publishing the smart contract.
 /// Create and share the cash registry.
@@ -72,11 +75,21 @@ public fun deposit(payment: Coin<SUI>, registry: &mut CashRegistry) {
 }
 
 /// Mint a new employee card and transfer it to the sender.
-public fun new_employee_card(ctx: &mut TxContext) {
+public fun new_employee_card(ctx: &mut TxContext): (EmployeeCard, HotPotato) {
+    let hot_potato = HotPotato {};
     let card = EmployeeCard {
         id: object::new(ctx),
     };
 
+    (card, hot_potato)
+}
+
+public fun transfer_employee_card(
+    hot_potato: HotPotato,
+    card: EmployeeCard,
+    ctx: &mut TxContext,
+) {
+    let HotPotato {} = hot_potato;
     transfer::transfer(card, ctx.sender());
 }
 
