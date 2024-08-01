@@ -157,6 +157,7 @@ In order to interact with the smart contract through the TS code, you will need 
 - Also touched more on destructuring objects, even temporary objects that don't have `key`.
 - Explored the nature of PTBs, how to make multiple moveCalls in a PTB and how to get the returned objects from moveCalls and use them in our next moveCalls.
 - How we can satisfy the hot-potato pattern when building transactions with the SDK.
+- Limitations of PTBs, such as, we cannot use as input returns from functions that return references, we need to have the object by value in our PTB.
 - Talked about private keys, how to get the signer/keypair and how to also derive the public key and Sui address from a keypair.
 - Reviewed how the signer can utilise any objects being created in a PTB and pass them as arguments to other moveCalls, even if the transaction has not been executed yet (signer-scoped ownership). Also saw how we can re-order moveCalls to accommodate our purpose.
 - Conversed on the importance of designing a smart contract and how the TS SDK integration would happen - also how sometimes we may need to trace back and apply changes to our contract in order to make it more modular or even apply restrictions in order to enhance or protect the execution of PTBs.
