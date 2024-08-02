@@ -13,6 +13,7 @@ export const ADMIN_SECRET = process.env.ADMIN_PRIVATE_KEY;
 export const PACKAGE_ID = process.env.PACKAGE_ID;
 export const SHARED_CASH_REGISTRY = process.env.CASH_REGISTRY;
 export const SUI_NETWORK = process.env.SUI_NETWORK;
+export const CUSTOMER_SECRET = process.env.CUSTOMER_PRIVATE_KEY;
 
 // Create a new sui client instance
 export const suiClient = new SuiClient({
@@ -20,7 +21,7 @@ export const suiClient = new SuiClient({
 });
 
 export function getKeypair(privateKey: string): Ed25519Keypair {
-  let privateKeyArray = Array.from(fromB64(ADMIN_SECRET!));
+  let privateKeyArray = Array.from(fromB64(privateKey!));
   privateKeyArray.shift();
   return Ed25519Keypair.fromSecretKey(Uint8Array.from(privateKeyArray));
 }

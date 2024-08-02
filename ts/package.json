@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "main": "ts-node main.ts",
-    "membership" : "ts-node membership.ts"
+    "membership" : "ts-node membership.ts",
+    "customer" : "ts-node customer.ts"
   },
   "dependencies": {
     "@mysten/sui": "^1.4.0",
