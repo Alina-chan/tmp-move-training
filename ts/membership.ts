@@ -1,11 +1,11 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { PACKAGE_ID, suiClient, getKeypair, ADMIN_SECRET } from "./config";
+import { PACKAGE_ID, suiClient, getKeypair, ADMIN_SECRET, CUSTOMER_SECRET } from "./config";
 
 async function main() {
   // Call the smart contract and mint a new membership card.
   try {
     const tx = new Transaction();
-    const adminAddress = getKeypair(ADMIN_SECRET!).getPublicKey().toSuiAddress()
+    const customerAddress = getKeypair(CUSTOMER_SECRET!).toSuiAddress()
 
     const [employeeCard, hotPotato] = tx.moveCall({
         target: `${PACKAGE_ID}::suispresso::new_employee_card`,
@@ -16,8 +16,8 @@ async function main() {
         target: `${PACKAGE_ID}::membership::new_card`,
         arguments: [
           employeeCard,
-          tx.pure.string("Dionisis"),
-          tx.pure.address(adminAddress)
+          tx.pure.string("Customer"),
+          tx.pure.address(customerAddress)
         ],
         //typeArguments:[`${PACKAGE_ID}::x::x`]
       });
