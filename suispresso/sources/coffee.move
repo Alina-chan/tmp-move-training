@@ -10,6 +10,8 @@ use move_training::suispresso::{CashRegistry, deposit};
 use std::string::{Self, String};
 use sui::coin::{Self, Coin};
 use sui::display;
+use sui::dynamic_field as df;
+use sui::dynamic_object_field as dof;
 use sui::package;
 use sui::sui::SUI;
 
@@ -30,10 +32,18 @@ public struct Straw has store, drop {
     color: String,
 }
 
+public struct Cup has key, store {
+    id: UID,
+    material: String,
+}
+
 public struct COFFEE has drop {}
 
+// Constants are always uppercase, such as MAX_COFFEE_SIZE
+// Error codes should always be prefix with E and be in camelcase.
+
 // === Error codes ===
-const ERROR_INSUFFICIENT_PAYMENT: u64 = 1;
+const EInsufficientPayment: u64 = 1;
 
 fun init(otw: COFFEE, ctx: &mut TxContext) {
     // Claim the Publisher object.
@@ -113,7 +123,7 @@ public fun buy_coffee(
     ctx: &mut TxContext,
 ): Coffee {
     // Verify the payment amount matches the price
-    assert!(coin::value(&payment) == price, ERROR_INSUFFICIENT_PAYMENT);
+    assert!(coin::value(&payment) == price, EInsufficientPayment);
 
     // Create the coffee
     let coffee = if (iced) {
@@ -165,7 +175,50 @@ public(package) fun create_straw(): Straw {
     }
 }
 
-/// Destroy a coffee.
+/// Update the coffee name.
+public fun update_name(coffee: &mut Coffee, new_name: String) {
+    coffee.name = new_name
+}
+
+/// I want a way to update my coffee and add milk.
+public fun add_milk(coffee: &mut Coffee) {
+    df::add<String, bool>(&mut coffee.id, string::utf8(b"milk"), true);
+}
+
+/// A dynamic field with key `Name` can exist once. If you try to add a DF with the
+/// same key, a ``EFieldAlreadyExists`` error will be thrown.
+public fun add_sugar(coffee: &mut Coffee) {
+    // Check if the field already exists
+    // assert!(
+    //     df::exists_(&coffee.id, string::utf8(b"sugar")) == false,
+    //     ESugarAlreadyExists,
+    // );
+
+    // Check if sugar has already been added, and if not, add it.
+    if (df::exists_(&coffee.id, string::utf8(b"sugar"))) {
+        // If yes, increase it.
+        let sugar = df::borrow_mut<String, u64>(
+            &mut coffee.id,
+            string::utf8(b"sugar"),
+        );
+        *sugar = *sugar + 1;
+    } else {
+        df::add<String, u64>(&mut coffee.id, string::utf8(b"sugar"), 1);
+    };
+}
+
+/// Add cup for the cofee.
+/// This will create a Cup object and add it to the coffee, and the Cup will persist as
+/// an object on Sui.
+public fun add_cup(coffee: &mut Coffee, material: String, ctx: &mut TxContext) {
+    let cup = Cup {
+        id: object::new(ctx),
+        material,
+    };
+
+    dof::add(&mut coffee.id, string::utf8(b"cup"), cup);
+}
+
 public(package) fun destroy(coffee: Coffee) {
     let Coffee {
         id,

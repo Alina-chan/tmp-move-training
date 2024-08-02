@@ -165,7 +165,7 @@ In order to interact with the smart contract through the TS code, you will need 
 ### TODOs
 
 - [ ] Update the `history` vector in `membership` module, to add an entry of the current timestamp every time someone buys a coffee. You will need to add appropriate functions for accessing and updating the vector.
-- [ ] Write the TS integration code with the SDK, for a customer to buy a coffee. There are a few things you will need to do as subtasks for this task:
+- [x] Write the TS integration code with the SDK, for a customer to buy a coffee. There are a few things you will need to do as subtasks for this task:
   1. You need two entities in your app; one admin that will act as the employee and a customer with their own address and private key.
   2. Make sure the admin entity has an `EmployeeCard` so that they can issue a `MembershipCard` to the customer.
   3. The creation of `EmployeeCard` and `MembershipCard` are signed by the employee/admin.
@@ -173,3 +173,11 @@ In order to interact with the smart contract through the TS code, you will need 
   5. In order for the customer to buy a coffee, they need to supply their `MembershipCard`. Use existing methods from the client and RPC, to retrieve the customer's `MembershipCard` (you will need to query for the customer's address owned objects and find an object with type that corresponds to the `MembershipCard` type that we need).
   6. Use existing methods and RPC calls to retrieve the user's SUI balance, and create a coin (hint: split his coin) that will correspond to the price we need in order to call `buy_coffee`.
   7. Examine the transaction response and make sure that the payment is indeed stored under the `CashRegistry` and that the customer's `MembershipCard` points are incremented.
+
+## Session #5
+
+📅 Friday 2nd, August, 2024
+
+### Summary
+
+-
