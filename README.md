@@ -164,7 +164,6 @@ In order to interact with the smart contract through the TS code, you will need 
 
 ### TODOs
 
-- [ ] Update the `history` vector in `membership` module, to add an entry of the current timestamp every time someone buys a coffee. You will need to add appropriate functions for accessing and updating the vector.
 - [x] Write the TS integration code with the SDK, for a customer to buy a coffee. There are a few things you will need to do as subtasks for this task:
   1. You need two entities in your app; one admin that will act as the employee and a customer with their own address and private key.
   2. Make sure the admin entity has an `EmployeeCard` so that they can issue a `MembershipCard` to the customer.
@@ -180,4 +179,13 @@ In order to interact with the smart contract through the TS code, you will need 
 
 ### Summary
 
--
+- Worked on exercise #2 assigned on session #4
+- Showcased how to navigate the Typescript SDK in order to find available methods to use. Specifically, we checked how to query the network to get the owned objects of an address and how to filter the objects to retrieve.
+- Explained how coin management and gas smashing works on Sui, what `tx.gas` is and how we handle `splitCoins` and `mergeCoins`. In the end, we saw how to create a coin value that the smart contract function needs and how to pass that as an argument.
+- Showcased and worked on dynamic fields (DF) and dynamic object fields (DOF), what is the difference between the two, and we also added functions in the smart contract to show how both cases work and how the data would be represented on explorer for an object that has DFs and DOFs.
+- Explained what de-reference is, when attempting to update a value we borrow mutably from dynamic fields.
+- Explained how to read and debug transaction execution errors, such as `MoveAbort`, and how to search for the error code in our smart contract or the framework.
+- In order to implement the above, we talked about what dynamic NFTs are, and how we can mutate an NFT by updating their fields or adding DFs.
+- Talked about data structures, such as vector, Table, Bag.
+- Also touched a bit on transaction limits and object sizes in a transaction.
+- Introduction to move tests.
